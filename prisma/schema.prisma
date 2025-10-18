@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String?  @unique
+  phone     String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  companyNames CompanyName[]
+}
+
+model CompanyName {
+  id          Int      @id @default(autoincrement())
+  industry    String
+  legalName   String   // 法人姓名
+  phone       String   // 法人电话
+  birthDate   DateTime? // 可选出生日期
+  location    String?  // 公司所在地
+  suggestions Json     // 存储AI生成的名称数组和解释
+  rating      Int?     // 用户评分 1-5
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  userId      Int?
+  user        User?    @relation(fields: [userId], references: [id])
+  
+  @@index([userId])
+  @@index([createdAt])
+}
+

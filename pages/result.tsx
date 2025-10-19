@@ -315,11 +315,18 @@ export default function Result() {
                         {responseData.coreAnalysis.phoneNumber.yijingHexagram && (
                           <div className="mb-1">
                             <span className="font-semibold text-green-900">易经卦象：</span>
-                            <span className="text-gray-900 ml-2">{responseData.coreAnalysis.phoneNumber.yijingHexagram}</span>
+                            <span className="text-gray-900 ml-2">
+                              {typeof responseData.coreAnalysis.phoneNumber.yijingHexagram === 'string' 
+                                ? responseData.coreAnalysis.phoneNumber.yijingHexagram 
+                                : (responseData.coreAnalysis.phoneNumber.yijingHexagram as any)?.hexagram || ''}
+                            </span>
                           </div>
                         )}
-                        {responseData.coreAnalysis.phoneNumber.hexagramMeaning && (
+                        {responseData.coreAnalysis.phoneNumber.hexagramMeaning ? (
                           <p className="text-sm text-gray-700">{responseData.coreAnalysis.phoneNumber.hexagramMeaning}</p>
+                        ) : (typeof responseData.coreAnalysis.phoneNumber.yijingHexagram === 'object' && 
+                             (responseData.coreAnalysis.phoneNumber.yijingHexagram as any)?.meaning) && (
+                          <p className="text-sm text-gray-700">{(responseData.coreAnalysis.phoneNumber.yijingHexagram as any).meaning}</p>
                         )}
                       </div>
                     )}

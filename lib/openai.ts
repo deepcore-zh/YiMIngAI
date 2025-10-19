@@ -190,8 +190,8 @@ export interface CompanyNameResponse {
       number: string
       digitSum: number
       numerologyMeaning: string
-      yijingHexagram: string
-      hexagramMeaning: string
+      yijingHexagram: string | { hexagram: string; meaning: string }
+      hexagramMeaning?: string
     }
   }
   nameSuggestions: CompanyNameSuggestion[]

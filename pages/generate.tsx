@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Layout from '@/components/Layout'
-import LoadingSpinner from '@/components/LoadingSpinner'
 import { companyNameSchema, CompanyNameInput } from '@/lib/validations'
 
 export default function Generate() {
@@ -24,25 +23,13 @@ export default function Generate() {
     setError(null)
 
     try {
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        throw new Error(result.error || '生成失败')
-      }
-
-      // 跳转到结果页面
-      router.push(`/result?id=${result.id}`)
+      // 将表单数据存储到 sessionStorage
+      sessionStorage.setItem('generatingFormData', JSON.stringify(data))
+      
+      // 立即跳转到等待页面
+      router.push('/generating')
     } catch (err) {
       setError(err instanceof Error ? err.message : '发生未知错误')
-    } finally {
       setIsLoading(false)
     }
   }
@@ -170,12 +157,6 @@ export default function Generate() {
                 </button>
               </div>
             </form>
-
-            {isLoading && (
-              <div className="mt-8 border-t pt-8">
-                <LoadingSpinner message="AI正在基于周易五行为您精心生成名称..." />
-              </div>
-            )}
           </div>
 
           {/* 提示信息 */}
